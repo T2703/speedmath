@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Math from './components/Math';
 import Leaderboard from './components/Leaderboard';
+import Home from './components/Homepage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/math/:operatorType" element={<Math />} />
         <Route path="/leaderboards/:operatorType" element={<Leaderboard />} />
+        <Route path="/user" element ={<Home/>}/>
       </Routes>
     </BrowserRouter>
   );
