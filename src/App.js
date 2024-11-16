@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-// src/App.js
-
-import React from 'react';
-import Homepage from './components/Homepage';
-
-function App() {
-    return (
-        <div className="App">
-            <Homepage />
-        </div>
-    );
-=======
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
@@ -27,7 +14,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
->>>>>>> cf4472e85fe412fd2f5a5848fa1ea5fbcda6d803
 }
 
 export default App;
