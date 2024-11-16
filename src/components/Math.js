@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { doc, setDoc } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { db } from '../backend/firebaseConfig.js'
-import Leaderboard from "./Leaderboard.js";
-
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../backend/firebaseConfig.js'
 /**
  * The maht and depending on the math give problems based on that.
  * @returns The math page. 
@@ -121,6 +118,43 @@ const Math = () => {
         }
     };
 
+    const updateUserScore = async () => {
+        if (!auth.currentUser) {
+            console.error('User is not authenticated');
+            return;
+        }
+
+        try {
+            const scoreField = `${operatorType}Score`
+
+            const userRef = doc(db, 'Users', auth.currentUser.uid);
+            const userDoc = await getDoc(userRef); 
+
+            if (!userDoc.exists()) {
+                console.error('User does not exist!');
+                return;
+            }    
+
+            const currentScore = userDoc.data()[scoreField] || 0;
+
+            if (score > currentScore) {
+                const updatedData = {
+                    [scoreField]: score
+                };
+    
+                if (auth.currentUser.uid) {
+                    // Update the listing in Firestore
+                    await updateDoc(doc(db, 'Users', auth.currentUser.uid), updatedData);
+                } else {
+                    alert('User ID is missing.');
+                }
+            }
+        } catch (error) {
+            console.error('Error updating user:', error);
+            alert('Failed to update user. Please try again.');
+        }
+    }
+
     useEffect(() => {
         generateProblems();
 
@@ -130,9 +164,8 @@ const Math = () => {
                 if (prevTime <= 1) {
                     clearInterval(timer);
                     setIsCorrect(false); 
-                    generateProblems(); 
+                    updateUserScore();
                     navigate(`/leaderboards/${operatorType}`)
-                    //return 60; 
                 }
                 return prevTime - 1;
             });
@@ -140,7 +173,7 @@ const Math = () => {
 
         // Clean up the interval on component unmount
         return () => clearInterval(timer);
-    }, []);
+    }, [score]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 text-center">
