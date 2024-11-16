@@ -21,6 +21,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 const analytics = getAnalytics(app);
 
 setPersistence(auth, browserLocalPersistence) 
@@ -30,4 +31,4 @@ setPersistence(auth, browserLocalPersistence)
   .catch((error) => {
     console.error('Error setting persistence:', error);
   });
-export { db, storage, auth, analytics, signInWithEmailAndPassword};
+export { db, auth, analytics, signInWithEmailAndPassword};
