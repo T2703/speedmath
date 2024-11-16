@@ -35,11 +35,38 @@ const Leaderboard = () => {
 
 
     return (
-        <div>
-          <h1>Leaderboard</h1>
-        </div>
-      );
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+            <h1 className="text-3xl font-bold text-blue-500 mb-6">Leaderboard - {operatorType}</h1>
 
+            <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
+                <table className="w-full text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th className="border-b-2 p-3 text-gray-700 font-semibold">Rank</th>
+                            <th className="border-b-2 p-3 text-gray-700 font-semibold">User</th>
+                            <th className="border-b-2 p-3 text-gray-700 font-semibold">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {leaderboard.length > 0 ? (
+                            leaderboard.map((entry, index) => (
+                                <tr key={entry.id} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                                    <td className="p-3 text-gray-800">{index + 1}</td>
+                                    <td className="p-3 text-gray-800">{entry.username || "Anonymous"}</td>
+                                    <td className="p-3 text-gray-800">{entry[`${operatorType}Score`] || 0}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="p-3 text-center text-gray-500">No scores yet!</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }
 
 export default Leaderboard;
+

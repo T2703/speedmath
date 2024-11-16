@@ -18,12 +18,27 @@ const Math = () => {
     const [isCorrect, setIsCorrect] = useState(null);
     const [score, setScore] = useState(0);
     const [celebrate, setCelebrate] = useState(false); 
+    const [motivate,setMotivate]=useState(true);
+    const [motivationalQuote, setMotivationalQuote] = useState(''); // New state for the selected quote
     const Math = window.Math;
 
     const [timeLeft, setTimeLeft] = useState(90);
 
     // For navigating around the pages
     const navigate = useNavigate();
+
+        // Array of motivational quotes
+        const motivationalQuotes = [
+          "Don't give up!",
+          "Keep going, you’re doing great!",
+          "You’ve got this!", 
+          "Mistakes are proof that you’re trying.",
+          "Practice makes perfect!",
+          "Keep pushing, you’ll get there!",
+          "Stay positive and try again!",
+          "Believe in yourself!",
+          "Each mistake is a step closer to success!",
+      ];
 
     // This generate problems.
     const generateProblems = () => {
@@ -93,8 +108,16 @@ const Math = () => {
         if (parseFloat(answer) === correctAnswer) {
             setScore((prevScore) => prevScore + 1);
             setIsCorrect(true);
+            setCelebrate(true);
+            setTimeout(() => setCelebrate(false), 1000); // Stop celebration after 1 second
         } else {
             setIsCorrect(false);
+            setCelebrate(false);
+            setMotivate(true);
+            setTimeout(() => setMotivate(false), 2000)
+            // Select a random motivational quote for incorrect answers
+            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            setMotivationalQuote(randomQuote); // Update the selected quote
         }
     };
 
@@ -158,6 +181,11 @@ const Math = () => {
                     </p>
                 )}
             </div>
+            {motivate && (
+                <div className="text-xl text-red-500 font-semibold animate-shake mb-4">
+                {motivationalQuote}
+            </div>
+            )}
             {celebrate && (
                 <div className="text-6xl text-green-500 animate-bounce font-extrabold mb-4">
                     🎉 Great Job! 🎉

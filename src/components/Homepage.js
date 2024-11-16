@@ -33,14 +33,14 @@ function Homepage() {
             <section className="levels mb-8 w-full max-w-3xl">
                 <h2 className="text-2xl font-semibold text-gray-700 text-center mb-4">Choose Your Level</h2>
                 <div className="level-buttons flex flex-wrap justify-center gap-4">
-                    <button className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Addition</button>
-                    <button className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Subtraction</button>
-                    <button className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Multiplication</button>
-                    <button className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Division</button>
+                    <button onClick={() => navigate('/math/addition')} className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Addition</button>
+                    <button onClick={() => navigate('/math/subtraction')} className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Subtraction</button>
+                    <button onClick={() => navigate('/math/multiplication')} className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Multiplication</button>
+                    <button onClick={() => navigate('/math/division')} className="level bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200">Division</button>
                 </div>
             </section>
 
-            <button onClick={() => navigate('/math')} className="play-button bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
+            <button onClick={() => navigate('/math/all')} className="play-button bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
                 Start Playing!
             </button>
 
