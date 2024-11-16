@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { doc, setDoc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { db } from '../backend/firebaseConfig.js'
+import Leaderboard from "./Leaderboard.js";
 
 /**
  * The maht and depending on the math give problems based on that.
  * @returns The math page. 
  */
 const Math = () => {
+    const { operatorType } = useParams();
     const [num1, setNum1] = useState(0);
     const [num2, setNum2] = useState(0);
     const [operator, setOperator] = useState('+');
@@ -25,10 +27,46 @@ const Math = () => {
 
     // This generate problems.
     const generateProblems = () => {
-        setNum1(Math.floor(Math.random() * 10) + 1);
-        setNum2(Math.floor(Math.random() * 10) + 1);
-        const operators = ['+', '-'];
-        setOperator(operators[Math.floor(Math.random() * operators.length)]);
+        const maxNumber = 10;
+
+        const number1 = (Math.floor(Math.random() * maxNumber) + 1);
+        const number2 = (Math.floor(Math.random() * maxNumber) + 1);
+        
+        switch (operatorType) {
+            case 'addition':
+                setNum1(number1);
+                setNum2(number2);
+                setOperator('+');   
+                break;
+            case 'subtraction':
+                setNum1(number1);
+                setNum2(number2);
+                setOperator('-');
+                break;
+            case 'multiplication':
+                setNum1(number1);
+                setNum2(number2);
+                setOperator('*');
+                break;
+            case 'division':
+                setNum2(number2); 
+                setNum1(number2 * (Math.floor(Math.random() * maxNumber) + 1));
+                setOperator('/');
+                break;
+            case 'all':
+                const operators = ['+', '-', '*', '/'];
+                setOperator(operators[Math.floor(Math.random() * operators.length)]);
+
+                if (operator === '/') {
+                    setNum2(number2);
+                    setNum1(number2 * (Math.floor(Math.random() * maxNumber) + 1));
+                } else {
+                    setNum1(number1);
+                    setNum2(number2);
+                }
+            default:
+                break;
+        }
         setIsCorrect(null);
         setAnswer('');
     };
@@ -45,11 +83,14 @@ const Math = () => {
             break;
           case '*':
             correctAnswer = num1 * num2;
+        case '/':
+            correctAnswer = num1 / num2;
             break;
+        default:
+            correctAnswer = null;
         }
-        setIsCorrect(parseInt(answer) === correctAnswer);
 
-        if (parseInt(answer) === correctAnswer) {
+        if (parseFloat(answer) === correctAnswer) {
             setScore((prevScore) => prevScore + 1);
             setIsCorrect(true);
         } else {
@@ -67,7 +108,7 @@ const Math = () => {
                     clearInterval(timer);
                     setIsCorrect(false); 
                     generateProblems(); 
-                    alert("You suck");
+                    navigate(`/leaderboards/${operatorType}`)
                     //return 60; 
                 }
                 return prevTime - 1;
@@ -79,6 +120,33 @@ const Math = () => {
     }, []);
 
     return (
+        <div>
+          <h1>Math Problems</h1>
+          <h1>Score {score}</h1>
+          <h2>Time Left: {timeLeft} seconds</h2>
+          <p>
+            {num1} {operator} {num2} = ?
+          </p>
+          <form
+            onSubmit={(e) => {
+                e.preventDefault(); // Prevent default form submission behavior
+                checkAnswer();
+                generateProblems();
+            }}
+        >
+            <input
+                type="number"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                required
+            />
+            <button type="submit">Submit</button>
+        </form>
+          {isCorrect !== null && (
+            <p>{isCorrect ? 'Correct!' : 'Incorrect'}</p>
+          )}
+        </div>
+      );
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 text-center">
           <h1 className="text-3xl font-bold text-blue-500 mb-4">Math Problems</h1>
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Score: <span className="text-green-600">{score}</span></h2>
@@ -106,7 +174,6 @@ const Math = () => {
                   </p>
               )}
           </div>
-
           {celebrate && (
               <div className="text-6xl text-green-500 animate-bounce font-extrabold mb-4">
                   🎉 Great Job! 🎉

@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Math from './components/Math';
+import Leaderboard from './components/Leaderboard';
 import Home from './components/Homepage';
 
 function App() {
@@ -13,9 +14,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/math/:operatorType" element={<Math />} />
+        <Route path="/leaderboards/:operatorType" element={<Leaderboard />} />
         <Route path="/user" element ={<Home/>}/>
-        <Route path="/math" element={<Math />} />
-
       </Routes>
     </BrowserRouter>
   );
