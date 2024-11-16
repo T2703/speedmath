@@ -1,10 +1,21 @@
 import React from 'react';
 import { Route, useNavigate } from 'react-router-dom';
-
-
+import { signOut } from 'firebase/auth';
+import { auth } from '../backend/firebaseConfig.js'
 
 function Homepage() {
     const navigate = useNavigate();
+
+    // Well I mean it's the logout.
+    const handleLogout = async () => {      
+        try {
+            await signOut(auth);
+            navigate('/'); // Redirect to login page after successful sign-out
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
+
     return (
         <div className="homepage min-h-screen flex flex-col items-center bg-gray-100 p-4">
             <header className="header text-center bg-blue-500 text-white p-6 rounded w-full max-w-3xl shadow-lg mb-8">
@@ -42,6 +53,10 @@ function Homepage() {
 
             <button onClick={() => navigate('/math/all')} className="play-button bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
                 Start Playing!
+            </button>
+
+            <button onClick={handleLogout} className="play-button bg-red-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
+                Logout
             </button>
 
             <footer className="footer text-gray-600 text-center mt-auto">
