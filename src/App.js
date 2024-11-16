@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Math from './components/Math';
+import Leaderboard from './components/Leaderboard';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/math" element={<Math />} />
+        <Route path="/math/:operatorType" element={<Math />} />
+        <Route path="/leaderboards/:operatorType" element={<Leaderboard />} />
       </Routes>
     </BrowserRouter>
   );

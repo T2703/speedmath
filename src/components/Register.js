@@ -14,6 +14,11 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [additionScore, setAdditionScore] = useState(0);
+    const [subtractionScore, setSubtractionScore] = useState(0);
+    const [multiplicationScore, setMultiplicationScore] = useState(0);
+    const [divisionScore, setDivisionScore] = useState(0);
+
     // For checking the confirmation of the password.
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -45,6 +50,10 @@ const Register = () => {
             await setDoc(doc(db, 'Users', user.uid), {
                 username,
                 email,
+                additionScore,
+                subtractionScore,
+                multiplicationScore,
+                divisionScore,
             });
 
             console.log('User registered successfully');
