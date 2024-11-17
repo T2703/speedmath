@@ -19,7 +19,7 @@ const Math = () => {
     const [motivationalQuote, setMotivationalQuote] = useState(''); // New state for the selected quote
     const Math = window.Math;
 
-    const [timeLeft, setTimeLeft] = useState(90);
+    const [timeLeft, setTimeLeft] = useState(10);
 
     // For navigating around the pages
     const navigate = useNavigate();

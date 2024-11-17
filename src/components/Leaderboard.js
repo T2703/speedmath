@@ -135,64 +135,25 @@ const Leaderboard = () => {
                 </tbody>
             </table>
         </div>
-    </div>
+        <div className="mt-6 flex space-x-4">
+                <button
+                    onClick={() => navigate(`/math/${operatorType}`)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Try Again!
+                </button>
+                <button
+                    onClick={() => navigate('/user')}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Home
+                </button>
+            </div>
+        </div>
 );
 }
 
-// <<<<<<< HEAD
-//         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-//             <h1 className="text-3xl font-bold text-blue-500 mb-6">Leaderboard - {operatorType}</h1>
-// =======
-//         <div>
-//             <div>
-//                 {userRank !== null && currentUserScore !== null ? (
-//                     <p>Your Rank: {userRank} with {currentUserScore} points</p>
-//                 ) : (
-//                     <p>Loading your rank...</p>
-//                 )}
-//             </div>
-//             <h1>{operatorType.charAt(0).toUpperCase() + operatorType.slice(1)} Leaderboard</h1>
-//             <ul>
-//                 {leaderboard.map((user, index) => (
-//                     <li key={user.id}>
-//                         {index + 1}. {user.username} - {user[`${operatorType}Score`]} points
-//                     </li>
-//                 ))}
-//             </ul>
-//         </div>
-//     );
-// >>>>>>> 67299534b5cc96391c6fc0f0d76c15491a43d311
 
-//             <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
-//                 <table className="w-full text-left border-collapse">
-//                     <thead>
-//                         <tr>
-//                             <th className="border-b-2 p-3 text-gray-700 font-semibold">Rank</th>
-//                             <th className="border-b-2 p-3 text-gray-700 font-semibold">User</th>
-//                             <th className="border-b-2 p-3 text-gray-700 font-semibold">Score</th>
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {leaderboard.length > 0 ? (
-//                             leaderboard.map((entry, index) => (
-//                                 <tr key={entry.id} className={`hover:bg-blue-50 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-//                                     <td className="p-3 text-gray-800">{index + 1}</td>
-//                                     <td className="p-3 text-gray-800">{entry.username || "Anonymous"}</td>
-//                                     <td className="p-3 text-gray-800">{entry[`${operatorType}Score`] || 0}</td>
-//                                 </tr>
-//                             ))
-//                         ) : (
-//                             <tr>
-//                                 <td colSpan="3" className="p-3 text-center text-gray-500">No scores yet!</td>
-//                             </tr>
-//                         )}
-//                     </tbody>
-//                 </table>
-//             </div>
-//         </div>
-        
-//     );
-// }
 
 export default Leaderboard;
 
