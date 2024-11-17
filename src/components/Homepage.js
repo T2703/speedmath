@@ -16,6 +16,8 @@ function Homepage() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [selectedLeaderboard, setSelectedLeaderboard] = useState('Select Leaderboard');
 
+    const DELAY = 420;
+
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
     };
@@ -208,6 +210,9 @@ function Homepage() {
                         <p className="font-bold text-gray-800">Welcome, {user.username}</p>
                         <p className="text-sm text-gray-500">{user.email}</p>
                     </div>
+                    <button onClick={() => navigate('/profile')} className="play-button bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
+                        Profile
+                    </button>
                     <h3 className="text-lg font-semibold text-gray-700 mb-4">Leaderboards</h3>
                     <div className="mb-4">
                         <select
@@ -340,12 +345,6 @@ function Homepage() {
                     </div>
                 </div>
             </section>
-
-
-            <button onClick={() => navigate('/profile')} className="play-button bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
-                Profile Placeholder
-            </button>
-
         </div>
     );
     

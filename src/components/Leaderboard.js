@@ -14,6 +14,7 @@ const Leaderboard = () => {
     const [userRank, setUserRank] = useState(null);
     const [currentUserScore, setCurrentUserScore] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // For navigating around the pages
     const navigate = useNavigate();
@@ -84,18 +85,22 @@ const Leaderboard = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is logged in, load leaderboard
-                loadLeaderboard().then(() => setLoading(false));
+                setIsAuthenticated(true); // User is authenticated
+                loadLeaderboard().then(() => setLoading(false)); // Load leaderboard
             } else {
-                // User is not logged in, redirect to login
-                navigate('/');
+                setIsAuthenticated(false); // User is not authenticated
             }
         });
+    
+        return () => unsubscribe(); // Cleanup listener on unmount
+    }, [operatorType]);
 
-        // Cleanup listener on component unmount
-        return () => unsubscribe();
-    }, [operatorType, navigate]);
-
+    useEffect(() => {
+        if (!isAuthenticated && !loading) {
+            navigate('/login'); // Redirect to login
+        }
+        console.log("Is Authenticated", isAuthenticated);
+    }, [isAuthenticated, loading, navigate]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">

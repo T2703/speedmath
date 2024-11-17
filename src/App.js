@@ -10,6 +10,7 @@ import Home from './components/Homepage';
 import LandingPage from './components/LandingPage';
 import Profile from './components/Profile'
 import ProfileEdit from './components/ProfileEdit';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/'element={<LandingPage/>}/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element ={<ForgotPassword/>}/>
         <Route path="/math/:operatorType" element={<Math />} />
         <Route path="/leaderboards/:operatorType" element={<Leaderboard />} />
         <Route path="/user" element ={<Home/>}/>
