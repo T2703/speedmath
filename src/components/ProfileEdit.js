@@ -9,7 +9,7 @@ import { auth,db } from '../backend/firebaseConfig.js'
  */
 const ProfileEdit = () => {
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    //const [email, setEmail] = useState("");
     const navigate = useNavigate();
 
     // Fetch user data from the database
@@ -26,7 +26,7 @@ const ProfileEdit = () => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 setUsername(data.username || "");
-                setEmail(data.email || "");
+                //setEmail(data.email || "");
             } else {
                 console.error("User not found");
             }
@@ -52,7 +52,6 @@ const ProfileEdit = () => {
         try {
             const updatedData = {
                 username,
-                email,
             };
 
             if (auth.currentUser.uid) {
@@ -80,16 +79,6 @@ const ProfileEdit = () => {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
-                <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         required
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />

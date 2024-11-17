@@ -20,9 +20,9 @@ const Math = () => {
     const [motivationalQuote, setMotivationalQuote] = useState(''); // New state for the selected quote
     const Math = window.Math;
 
-    //const [timeLeft, setTimeLeft] = useState(10);
+    //const [timeLeft, setTimeLeft] = useState(45);
 
-    const [timeLeft, setTimeLeft] = useState(45);
+    const [timeLeft, setTimeLeft] = useState(90);
     const [problemsSolved, setProblemsSolved] = useState(0);  
     const [currentDifficultyLevel, setCurrentDifficultyLevel] = useState(1);
 
