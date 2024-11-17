@@ -9,6 +9,7 @@ import Leaderboard from './components/Leaderboard';
 import Home from './components/Homepage';
 import LandingPage from './components/LandingPage';
 import Profile from './components/Profile'
+import ProfileEdit from './components/ProfileEdit';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/leaderboards/:operatorType" element={<Leaderboard />} />
         <Route path="/user" element ={<Home/>}/>
         <Route path="/profile" element ={<Profile/>}/>
+        <Route path="/editprofile" element ={<ProfileEdit/>}/>
       </Routes>
     </BrowserRouter>
   );
