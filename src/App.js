@@ -7,6 +7,7 @@ import Register from './components/Register';
 import Math from './components/Math';
 import Leaderboard from './components/Leaderboard';
 import Home from './components/Homepage';
+import Profile from './components/Profile';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/math/:operatorType" element={<Math />} />
         <Route path="/leaderboards/:operatorType" element={<Leaderboard />} />
         <Route path="/user" element ={<Home/>}/>
+        <Route path="/profile" element ={<Profile/>}/>
       </Routes>
     </BrowserRouter>
   );

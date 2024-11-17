@@ -22,7 +22,7 @@ const Math = () => {
 
     //const [timeLeft, setTimeLeft] = useState(10);
 
-    const [timeLeft, setTimeLeft] = useState(90);
+    const [timeLeft, setTimeLeft] = useState(10);
     const [problemsSolved, setProblemsSolved] = useState(0);  
     const [currentDifficultyLevel, setCurrentDifficultyLevel] = useState(1);
 
