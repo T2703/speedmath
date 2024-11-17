@@ -294,16 +294,12 @@ function Homepage() {
                     </div>
                 </div>
             </section>
-    
-            {/* Logout Button */}
-            <button onClick={handleLogout} className="play-button bg-red-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-red-600 transition duration-200 mb-8">
-                Logout
+
+
+            <button onClick={() => navigate('/profile')} className="play-button bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-600 transition duration-200 mb-8">
+                Profile Placeholder
             </button>
-    
-            {/* Footer Section */}
-            <footer className="footer text-gray-600 text-center mt-auto py-4 w-full max-w-4xl border-t border-gray-200">
-                <p className="text-sm">Contact Support | Privacy Policy | Terms of Service</p>
-            </footer>
+
         </div>
     );
     
