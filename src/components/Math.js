@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../backend/firebaseConfig.js'
+import { setLogLevel } from "firebase/firestore/lite";
 /**
  * The maht and depending on the math give problems based on that.
  * @returns The math page. 
@@ -10,7 +11,7 @@ const Math = () => {
     const { operatorType } = useParams();
     const [num1, setNum1] = useState(0);
     const [num2, setNum2] = useState(0);
-    const [operator, setOperator] = useState('+');
+    const [operator, setOperator] = useState('/'); // for a quick fix
     const [answer, setAnswer] = useState(0);
     const [isCorrect, setIsCorrect] = useState(null);
     const [score, setScore] = useState(0);
@@ -19,7 +20,11 @@ const Math = () => {
     const [motivationalQuote, setMotivationalQuote] = useState(''); // New state for the selected quote
     const Math = window.Math;
 
-    const [timeLeft, setTimeLeft] = useState(10);
+    //const [timeLeft, setTimeLeft] = useState(10);
+
+    const [timeLeft, setTimeLeft] = useState(90);
+    const [problemsSolved, setProblemsSolved] = useState(0);  
+    const [currentDifficultyLevel, setCurrentDifficultyLevel] = useState(1);
 
     // For navigating around the pages
     const navigate = useNavigate();
@@ -37,45 +42,107 @@ const Math = () => {
           "Each mistake is a step closer to success!",
       ];
 
-    // This generate problems.
+    // This generate problems. // need
     const generateProblems = () => {
-        const maxNumber = 10;
+        let divisionNumber = 10;
+        let maxNumber;
+        let newDifficultyLevel;
 
+        if (score < 10) {
+            maxNumber = 10;
+            newDifficultyLevel = 1;
+        }
+        else {
+            maxNumber = 50;
+            newDifficultyLevel = 2;
+        }
+
+        if (newDifficultyLevel !== currentDifficultyLevel) {
+            setCurrentDifficultyLevel(newDifficultyLevel);
+            setTimeLeft((prevTime) => prevTime + 10);
+        }
+
+        console.log("problems:", problemsSolved);
+        console.log("max:", maxNumber);
+ 
         const number1 = (Math.floor(Math.random() * maxNumber) + 1);
         const number2 = (Math.floor(Math.random() * maxNumber) + 1);
+
+        let adjustedNum1 = number1;
+        let adjustedNum2 = number2;
         
         switch (operatorType) {
             case 'addition':
-                setNum1(number1);
-                setNum2(number2);
+                setNum1(adjustedNum1);
+                setNum2(adjustedNum2);
                 setOperator('+');   
                 break;
             case 'subtraction':
-                setNum1(number1);
-                setNum2(number2);
+                if (newDifficultyLevel === 1) {
+                    adjustedNum1 = Math.max(number1, number2);
+                    adjustedNum2 = Math.min(number1, number2);
+                } else if (Math.random() < 0.5) {
+                    adjustedNum1 = number2;
+                    adjustedNum2 = number1;
+                }
+                setNum1(adjustedNum1);
+                setNum2(adjustedNum2);
                 setOperator('-');
                 break;
             case 'multiplication':
-                setNum1(number1);
-                setNum2(number2);
-                setOperator('*');
+                setNum1(adjustedNum1);
+                setNum2(adjustedNum2);
+                setOperator('x');
                 break;
             case 'division':
-                setNum2(number2); 
-                setNum1(number2 * (Math.floor(Math.random() * maxNumber) + 1));
-                setOperator('/');
-                break;
-            case 'all':
-                const operators = ['+', '-', '*', '/'];
-                setOperator(operators[Math.floor(Math.random() * operators.length)]);
-
-                if (operator === '/') {
-                    setNum2(number2);
-                    setNum1(number2 * (Math.floor(Math.random() * maxNumber) + 1));
+                if (newDifficultyLevel === 1) {
+                    adjustedNum2 = Math.floor(Math.random() * (divisionNumber - 1)) + 2;
+                    adjustedNum1 = adjustedNum2 * (Math.floor(Math.random() * divisionNumber) + 1); 
                 } else {
-                    setNum1(number1);
-                    setNum2(number2);
+                    adjustedNum2 = Math.floor(Math.random() * (divisionNumber - 1)) + 2; 
+                    adjustedNum1 = Math.floor(Math.random() * divisionNumber * 2) + 1; 
                 }
+                setNum2(adjustedNum2);
+                setNum1(adjustedNum1);
+                setOperator('/');
+                break;          
+            case 'all':
+                const operators = ['+', '-', 'x', '/'];
+                const randomOperator = operators[Math.floor(Math.random() * operators.length)];
+                setOperator(randomOperator);
+                
+                if (randomOperator === '-') {
+                    // Adjust subtraction based on difficulty
+                    if (newDifficultyLevel === 1) {
+                        adjustedNum1 = Math.max(number1, number2);
+                        adjustedNum2 = Math.min(number1, number2);
+                    } else {
+                        if (Math.random() < 0.5) {
+                            adjustedNum1 = number2;
+                            adjustedNum2 = number1;
+                        } else {
+                            adjustedNum1 = number1;
+                            adjustedNum2 = number2;
+                        }
+                    }
+                    setNum1(adjustedNum1);
+                    setNum2(adjustedNum2);
+                }
+                else if (randomOperator === '/') {
+                    if (newDifficultyLevel === 1) {
+                        adjustedNum2 = Math.floor(Math.random() * (divisionNumber - 1)) + 2;
+                        adjustedNum1 = adjustedNum2 * (Math.floor(Math.random() * divisionNumber) + 1); 
+                    } else {
+                        adjustedNum2 = Math.floor(Math.random() * (divisionNumber - 1)) + 2; 
+                        adjustedNum1 = Math.floor(Math.random() * divisionNumber * 2) + 1; 
+                    }
+                    setNum2(adjustedNum2);
+                    setNum1(adjustedNum1);
+                } else {
+                    setNum1(adjustedNum1);
+                    setNum2(adjustedNum2);
+                }
+                break;
             default:
                 break;
         }
@@ -93,28 +160,41 @@ const Math = () => {
           case '-':
             correctAnswer = num1 - num2;
             break;
-          case '*':
+          case 'x':
             correctAnswer = num1 * num2;
             break;
         case '/':
-            correctAnswer = num1 / num2;
+            correctAnswer = (problemsSolved >= 10) ? parseFloat((num1 / num2).toFixed(1)) : num1 / num2;
             break;
         default:
             correctAnswer = null;
         }
 
-        if (parseFloat(answer) === correctAnswer) {
+        const userAnswer = parseFloat(answer);
+
+        if (isNaN(userAnswer)) {
+            console.error("User input is not a valid number.");
+            setIsCorrect(false);
+            setCelebrate(false);
+            setMotivate(true);
+            setTimeout(() => setMotivate(false), 2000);
+            setMotivationalQuote("Please enter a valid number.");
+            return;
+        }
+    
+        if (userAnswer === correctAnswer) {
             setScore((prevScore) => prevScore + 1);
             setIsCorrect(true);
             setCelebrate(true);
             setTimeout(() => setCelebrate(false), 1000); // Stop celebration after 1 second
         } else {
-            console.log(parseFloat(answer));
-            console.log(correctAnswer);
+            console.log("User answer:", userAnswer);
+            console.log("Correct answer:", correctAnswer);
             setIsCorrect(false);
             setCelebrate(false);
             setMotivate(true);
-            setTimeout(() => setMotivate(false), 2000)
+            setTimeout(() => setMotivate(false), 2000);
+            
             // Select a random motivational quote for incorrect answers
             const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
             setMotivationalQuote(randomQuote); // Update the selected quote
@@ -195,6 +275,7 @@ const Math = () => {
                         e.preventDefault();
                         checkAnswer();
                         generateProblems();
+                        setProblemsSolved((prevCount) => prevCount + 1);
                     }}
                 >
                     <input
@@ -203,6 +284,7 @@ const Math = () => {
                         onChange={(e) => setAnswer(e.target.value)}
                         className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 mb-4"
                         required
+                        step="any"
                     />
                     <button
                         type="submit"

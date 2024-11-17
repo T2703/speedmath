@@ -1,13 +1,14 @@
 // import React from 'react';
 import React, { useEffect, useState } from 'react';
 import { Route, useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth,db } from '../backend/firebaseConfig.js'
 import { doc, getDoc } from 'firebase/firestore';
 
 
 function Homepage() {
     const navigate = useNavigate();
+    const [user, setUser] = useState(null);
     const [scores, setScores] = useState(null);
     const [averageScores, setAverageScores] = useState(null);
     const [improvement, setImprovement] = useState({});
@@ -22,7 +23,36 @@ function Homepage() {
     // Handle leaderboard selection
     const handleLeaderboardSelect = (type) => {
         setSelectedLeaderboard(type);
+        if (type != "Select Leaderboard") {
+            navigate(`/leaderboards/${type.toLowerCase()}`);
+        }
+
         toggleDrawer(); // Close the drawer after selection
+    };
+
+    const fetchUserData = async () => {
+        if (!auth.currentUser) {
+            console.error("User is not authenticated");
+            return;
+        }
+
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const userListingDoc = await getDoc(doc(db, 'Users', auth.currentUser.uid));
+
+            if (userListingDoc.exists()) {
+                const userData = userListingDoc.data();
+                if (userData && 'username' in userData && 'email' in userData) {
+                    setUser({ id: userListingDoc.id, ...userData });
+                } else {
+                    console.error('User data is missing required fields');
+                }
+            } else {
+                console.error("User not found");
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     };
 
     // Fetch scores and calculate improvements
@@ -73,8 +103,24 @@ function Homepage() {
             }
         };
 
-        fetchScores();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchUserData();
+                fetchScores();
+            } else {
+                // User is not logged in, redirect to login
+                navigate('/');
+            }
+        });
+
+        // Cleanup listener on component unmount
+        return () => unsubscribe();
     }, []);    
+
+    // Only render user data if it exists
+    if (!user) {
+        return <div>Loading user data...</div>;
+    }
     // // Fetch scores and calculate improvements
     // useEffect(() => {
     //     const fetchScores = async () => {
@@ -159,8 +205,8 @@ function Homepage() {
                 <div className="flex flex-col h-full p-4">
                     <h2 className="text-2xl font-semibold text-blue-500 mb-6">Profile</h2>
                     <div className="mb-6">
-                        <p className="font-bold text-gray-800">Welcome, [User Name]</p>
-                        <p className="text-sm text-gray-500">user@example.com</p>
+                        <p className="font-bold text-gray-800">Welcome, {user.username}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
                     </div>
                     <h3 className="text-lg font-semibold text-gray-700 mb-4">Leaderboards</h3>
                     <div className="mb-4">
@@ -174,7 +220,7 @@ function Homepage() {
                             <option value="Subtraction">Subtraction</option>
                             <option value="Multiplication">Multiplication</option>
                             <option value="Division">Division</option>
-                            <option value="Random">Random</option>
+                            <option value="All">Random</option>
                         </select>
                     </div>
                     <button onClick={handleLogout} className="mt-auto bg-red-500 text-white py-2 px-4 rounded">
