@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import { doc, setDoc } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { db } from '../backend/firebaseConfig.js'
 
 /**
@@ -38,6 +38,10 @@ const Register = () => {
             alert("Passwords don't match");
             return;
         }
+        else if (password.length < 6) {
+            alert("Password length must be at least or greater than 6 characters");
+            return;
+        }
 
         // Get authentication. 
         const auth = getAuth();
@@ -46,20 +50,22 @@ const Register = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
+            localStorage.setItem('username', username);
+
             // Store additional user details in Firestore
-            await setDoc(doc(db, 'Users', user.uid), {
+            /*await setDoc(doc(db, 'Users', user.uid), {
                 username,
                 email,
                 additionScore,
                 subtractionScore,
                 multiplicationScore,
                 divisionScore,
-            });
+            });*/
 
-            console.log('User registered successfully');
-            alert('User registered successfully!');
+            await sendEmailVerification(user);
+            alert('Verification email has been sent. Please check your inbox.');
             
-            navigate('/'); 
+            navigate('/login'); 
         } catch (error) {
             console.error('Error registering user:', error);
             alert('Error registering user. Please try again.');

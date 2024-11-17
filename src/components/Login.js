@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../backend/firebaseConfig.js'
 
 /**
@@ -20,33 +20,42 @@ const Login = () => {
     
         const auth = getAuth();
         try {
-          await signInWithEmailAndPassword(auth, email, password);
-          console.log('User logged in successfully');
-          alert('Login successful!');
+            await signInWithEmailAndPassword(auth, email, password);
+            const user = auth.currentUser;
     
-          // Check the accountSetup status
-          const user = auth.currentUser;
-          
-          // Check if user is not null before accessing its properties (I think TypeScript gets mad at me if I don't)
-          if (user) {
-            const userDocRef = doc(db, `Users/${user.uid}`);
-            const userDoc = await getDoc(userDocRef);
-        
-            if (userDoc.exists()) {
-                navigate('/user'); 
-            } else {
-              console.log('No user document found');
-              alert('User data not found.');
+            // Check if the email is verified
+            if (!user.emailVerified) {
+                alert("Please verify your email before logging in.");
+                return;
             }
-          } else {
-            console.log('User is not logged in');
-            alert('Error logging in. Please try again.');
-          }
+    
+            // Check if Firestore document exists
+            const userDocRef = doc(db, 'Users', user.uid);
+            const userDoc = await getDoc(userDocRef);
+    
+            if (!userDoc.exists()) {
+                const username = localStorage.getItem('username') || 'Anonymous';
+
+                // Create the Firestore document for the user
+                await setDoc(userDocRef, {
+                    username,
+                    email: user.email,
+                    additionScore: 0,
+                    subtractionScore: 0,
+                    multiplicationScore: 0,
+                    divisionScore: 0,
+                });
+                localStorage.removeItem('username');
+                console.log('User document created in Firestore.');
+            }
+    
+            // Navigate to the dashboard or user page
+            navigate('/user');
         } catch (error) {
-          console.error('Error logging in:', error);
-          alert('Error logging in. Please check your email and password.');
+            console.error('Error logging in:', error);
+            alert('Error logging in. Please check your email and password.');
         }
-    };
+    };      
 
     return (
 <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -80,7 +89,7 @@ const Login = () => {
                 Don't have an account? <Link to="/register" className="text-blue-500 hover:underline">Register here</Link>
             </p>
             <p>
-                Forgot Password? <Link to="/forgotpass" className="text-blue-500 hover:underline">Click here</Link>
+                Forgot Password? <Link to="/forgot" className="text-blue-500 hover:underline">Click here</Link>
             </p>
         </div>
     );
