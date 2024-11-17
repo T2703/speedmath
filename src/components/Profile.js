@@ -108,73 +108,83 @@ const Profile = () => {
     }
 
     return (
-        <div>
-            <h1>Profile</h1>
-            <h2>{user.username}</h2>
-            <h2>{user.email}</h2>
-            <button onClick={() => setShowModal(true)}>Delete</button>
-            <button onClick={() => setShowUpdateModal(true)}>Edit</button>
-            <button onClick={handleLogout}>Logout</button>
+        <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
+        <h1 className="text-4xl font-bold text-blue-600 mb-6">Profile</h1>
+        <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{user.username}</h2>
+            <p className="text-gray-600 mb-6">{user.email}</p>
+            <div className="flex space-x-4">
+                <button onClick={() => navigate('/user')} className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">Home</button>
 
-            {/* Modal for delete */}
-            <div className={`modal ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex={-1} role="dialog">
-                <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">
-                    <h5 className="modal-title">Confirm Deletion</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowModal(false)}>×</button>
-                    </div>
-        
-                    <div className="modal-body">
-                    <p>Are you sure you want to delete your account?</p>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Enter Your Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {deleteError && <p className="error-text">{deleteError}</p>}
-                    </div>
-        
-                    <div className="modal-footer">
-                    <button type="button" className="btn btn-danger" onClick={handleDelete}>Yes</button>
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>No</button>
-                    </div>
-                </div>
-                </div>
-            </div>
+                <button onClick={() => setShowModal(true)} className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
+                    Delete
+                </button>
+                <button onClick={() => setShowUpdateModal(true)} className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                    Edit
+                </button>
+                <button onClick={handleLogout} className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600">
+                    Logout
+                </button>
 
-            {/* Modal for update */}
-            <div className={`modal ${showUpdateModal ? 'show' : ''}`} style={{ display: showUpdateModal ? 'block' : 'none' }} tabIndex={-1} role="dialog">
-                <div className="modal-dialog">
-                <div className="modal-content">
-                    <div className="modal-header">
-                    <h5 className="modal-title">Edit Account</h5>
-                    <button type="button" className="btn-close" onClick={() => setShowUpdateModal(false)}>×</button>
-                    </div>
-        
-                    <div className="modal-body">
-                    <p>Input your password to update your account.</p>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Enter Your Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {editError && <p className="error-text">{editError}</p>}
-                    </div>
-        
-                    <div className="modal-footer">
-                    <button type="button" className="btn btn-danger" onClick={handleUpdateProfile}>Yes</button>
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>No</button>
-                    </div>
-                </div>
-                </div>
+
             </div>
         </div>
-    );
+
+        {/* Modal for delete */}
+        {showModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                    <h5 className="text-2xl font-bold mb-4">Confirm Deletion</h5>
+                    <p className="mb-4">Are you sure you want to delete your account?</p>
+                    <input
+                        type="password"
+                        className="w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-red-500"
+                        placeholder="Enter Your Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {deleteError && <p className="text-red-600 mb-4">{deleteError}</p>}
+                    <div className="flex justify-end space-x-2">
+                        <button onClick={handleDelete} className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
+                            Yes
+                        </button>
+                        <button onClick={() => setShowModal(false)} className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            No
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* Modal for update */}
+        {showUpdateModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                    <h5 className="text-2xl font-bold mb-4">Edit Account</h5>
+                    <p className="mb-4">Input your password to update your account.</p>
+                    <input
+                        type="password"
+                        className="w-full p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter Your Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {editError && <p className="text-red-600 mb-4">{editError}</p>}
+                    <div className="flex justify-end space-x-2">
+                        <button onClick={handleUpdateProfile} className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                            Yes
+                        </button>
+                        <button onClick={() => setShowUpdateModal(false)} className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            No
+                        </button>
+            
+                    </div>
+                </div>
+            </div>
+        )}
+    </div>
+);
 }
+
 
 export default Profile;

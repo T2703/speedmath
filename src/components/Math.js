@@ -22,7 +22,7 @@ const Math = () => {
 
     //const [timeLeft, setTimeLeft] = useState(10);
 
-    const [timeLeft, setTimeLeft] = useState(10);
+    const [timeLeft, setTimeLeft] = useState(45);
     const [problemsSolved, setProblemsSolved] = useState(0);  
     const [currentDifficultyLevel, setCurrentDifficultyLevel] = useState(1);
 
@@ -257,60 +257,81 @@ const Math = () => {
         // Clean up the interval on component unmount
         return () => clearInterval(timer);
     }, [score]);
-
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 text-center">
-            <h1 className="text-3xl font-bold text-blue-500 mb-4">Math Problems</h1>
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                Score: <span className="text-green-600">{score}</span>
-            </h2>
-            <h2 className="text-lg text-red-500 mb-6">Time Left: {timeLeft} seconds</h2>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 via-white to-gray-100 p-6 text-center">
+          
+          {/* Title Section */}
+          <h1 className="text-4xl font-extrabold text-blue-600 mb-4 animate-fade-in">
+              Math Problems
+          </h1>
+          
+          {/* Score and Timer */}
+          <div className="flex items-center justify-around w-full max-w-md mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                  Score: <span className="text-green-600">{score}</span>
+              </h2>
+              <h2 className="text-2xl font-semibold text-red-500">
+                  Time Left: {timeLeft} sec
+              </h2>
+          </div>
+  
+          {/* Problem Display */}
+          <div className="bg-white p-8 rounded-lg shadow-2xl mb-6 w-full max-w-lg transition duration-200 ease-in-out transform hover:scale-105">
+              <p className="text-3xl font-bold text-gray-700 mb-6">
+                  {num1} {operator} {num2} = ?
+              </p>
+              
+              {/* Answer Form */}
+              <form
+                  onSubmit={(e) => {
+                      e.preventDefault();
+                      checkAnswer();
+                      generateProblems();
+                      setProblemsSolved((prevCount) => prevCount + 1);
+                  }}
+              >
+                  <input
+                      type="number"
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent mb-4 text-xl text-gray-700"
+                      required
+                      step="any"
+                      placeholder="Enter your answer"
+                  />
+                  <button
+                      type="submit"
+                      className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg hover:bg-blue-700 transition duration-200 transform hover:scale-105"
+                  >
+                      Submit
+                  </button>
+              </form>
+  
+              {/* Correct/Incorrect Message */}
+              {isCorrect !== null && (
+                  <p className={`mt-6 text-2xl font-semibold ${isCorrect ? "text-green-600 animate-pulse" : "text-red-600 animate-bounce"}`}>
+                      {isCorrect ? "Correct!" : "Incorrect"}
+                  </p>
+              )}
+          </div>
+  
+          {/* Motivational Quote */}
+          {motivate && (
+              <div className="text-2xl text-orange-600 font-semibold animate-pulse mb-6">
+                  {motivationalQuote}
+              </div>
+          )}
+  
+          {/* Celebration Message */}
+          {celebrate && (
+              <div className="text-6xl text-green-500 animate-bounce font-extrabold mb-6">
+                  🎉 Great Job! 🎉
+              </div>
+          )}
+      </div>
+  );
+  
 
-            <div className="bg-white p-6 rounded shadow-md mb-4 w-full max-w-md">
-                <p className="text-2xl font-bold mb-4">
-                    {num1} {operator} {num2} = ?
-                </p>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        checkAnswer();
-                        generateProblems();
-                        setProblemsSolved((prevCount) => prevCount + 1);
-                    }}
-                >
-                    <input
-                        type="number"
-                        value={answer}
-                        onChange={(e) => setAnswer(e.target.value)}
-                        className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300 mb-4"
-                        required
-                        step="any"
-                    />
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
-                    >
-                        Submit
-                    </button>
-                </form>
-                {isCorrect !== null && (
-                    <p className={`mt-4 text-lg font-semibold ${isCorrect ? "text-green-500 animate-pulse" : "text-red-500 animate-shake"}`}>
-                        {isCorrect ? "Correct!" : "Incorrect"}
-                    </p>
-                )}
-            </div>
-            {motivate && (
-                <div className="text-xl text-red-500 font-semibold animate-shake mb-4">
-                {motivationalQuote}
-            </div>
-            )}
-            {celebrate && (
-                <div className="text-6xl text-green-500 animate-bounce font-extrabold mb-4">
-                    🎉 Great Job! 🎉
-                </div>
-            )}
-        </div>
-    );
 }
 
 export default Math;

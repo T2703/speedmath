@@ -142,16 +142,16 @@ const Leaderboard = () => {
         </div>
         <div className="mt-6 flex space-x-4">
                 <button
-                    onClick={() => navigate(`/math/${operatorType}`)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    Try Again!
-                </button>
-                <button
                     onClick={() => navigate('/user')}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                     Home
+                </button>
+                <button
+                    onClick={() => navigate(`/math/${operatorType}`)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Get a Better Score!
                 </button>
             </div>
         </div>

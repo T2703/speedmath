@@ -52,15 +52,6 @@ const Register = () => {
 
             localStorage.setItem('username', username);
 
-            // Store additional user details in Firestore
-            /*await setDoc(doc(db, 'Users', user.uid), {
-                username,
-                email,
-                additionScore,
-                subtractionScore,
-                multiplicationScore,
-                divisionScore,
-            });*/
 
             await sendEmailVerification(user);
             alert('Verification email has been sent. Please check your inbox.');
