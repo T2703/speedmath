@@ -95,6 +95,7 @@ const Math = () => {
             break;
           case '*':
             correctAnswer = num1 * num2;
+            break;
         case '/':
             correctAnswer = num1 / num2;
             break;
@@ -108,6 +109,8 @@ const Math = () => {
             setCelebrate(true);
             setTimeout(() => setCelebrate(false), 1000); // Stop celebration after 1 second
         } else {
+            console.log(parseFloat(answer));
+            console.log(correctAnswer);
             setIsCorrect(false);
             setCelebrate(false);
             setMotivate(true);
