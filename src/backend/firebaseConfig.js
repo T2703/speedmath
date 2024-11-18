@@ -9,13 +9,13 @@ import { getAuth , signInWithEmailAndPassword, setPersistence, browserLocalPersi
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyB7-Yduv4tioBwUdGIufd5NmRidVlHpgeA",
-  authDomain: "speed-math-86ac5.firebaseapp.com",
-  projectId: "speed-math-86ac5",
-  storageBucket: "speed-math-86ac5.firebasestorage.app",
-  messagingSenderId: "257194838509",
-  appId: "1:257194838509:web:4a1bbee44ecd1ae6b93fe4",
-  measurementId: "G-2PMXPFZF8V"
+  apiKey: "math",
+  authDomain: "math",
+  projectId: "math",
+  storageBucket: "math",
+  messagingSenderId: "math",
+  appId: "math",
+  measurementId: "math"
 };
 
 // Initialize Firebase
